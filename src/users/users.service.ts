@@ -69,7 +69,7 @@ export class UsersService {
     const user = await this.getUserById(id);
     if (!user) {
       throw new HttpException(
-        { message: "The user doesn't exist.", payload: id },
+        { message: "The user doesn't exist.", payload: { id } },
         HttpStatus.BAD_REQUEST
       );
     }

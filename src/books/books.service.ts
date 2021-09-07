@@ -53,7 +53,7 @@ export class BooksService {
       throw new HttpException(
         {
           message: `The user doesn't exist`,
-          payload: userId,
+          payload: { userId },
         },
         HttpStatus.FORBIDDEN
       );
@@ -106,7 +106,7 @@ export class BooksService {
       throw new HttpException(
         {
           message: "The book doesn't exist.",
-          payload: bookId,
+          payload: { bookId },
         },
         HttpStatus.BAD_REQUEST
       );
