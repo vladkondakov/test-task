@@ -22,6 +22,7 @@ import { Book } from './books/books.entity';
       database: process.env.MYSQL_DB,
       entities: [User, Book],
       synchronize: true,
+      autoLoadEntities: true,
     }),
     UsersModule,
     BooksModule,

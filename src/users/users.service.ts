@@ -19,6 +19,11 @@ export class UsersService {
     return user;
   }
 
+  // async getUserWithBooksById(id: number): Promise<User> {
+  //   const user = await this.userRepository.findOne(id, { relations: ['books'] });
+  //   return user;
+  // }
+
   async createUser(dto: CreateUserDto): Promise<User> {
     const candidate = await this.getUserByEmail(dto.email);
     if (candidate) {
@@ -29,6 +34,7 @@ export class UsersService {
     }
 
     const user = this.userRepository.create(dto);
+    user.books = [];
     await this.userRepository.save(user);
     return user;
   }
@@ -49,12 +55,23 @@ export class UsersService {
     return users;
   }
 
-  async getUserFullInfo(id: number) {
-    const user = await this.getUserById(id);
+  async getUserFullInfo(id: number): Promise<User> {
+    const user = await this.userRepository.findOne(id, { relations: ['books'] });
     return user;
   }
 
   async delete(id: number): Promise<DeleteResult> {
     return await this.userRepository.delete(id);
+  }
+
+  async purchaseSubscription(id: number): Promise<User> {
+    const user = await this.getUserById(id);
+    if (!user) {
+      throw new HttpException("The user doesn't exist.", HttpStatus.BAD_REQUEST);
+    }
+
+    user.hasSubscription = true;
+    const updatedUser = await this.userRepository.save(user);
+    return updatedUser;
   }
 }

@@ -32,4 +32,9 @@ export class UsersController {
   async getUserFullInfo(@Param('id') id: number) {
     return await this.usersService.getUserFullInfo(id);
   }
+
+  @Put('/subscription/:id')
+  async purchaseSubscription(@Param('id') id: number) {
+    return await this.usersService.purchaseSubscription(id);
+  }
 }
