@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes } from '@nestjs/common';
-import { ValidationPipe } from 'src/pipes/validation.pipe';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  UseFilters,
+} from '@nestjs/common';
+import { HttpExceptionFilter } from '../filters/http-exception.filter';
+import { ValidationPipe } from '../pipes/validation.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
@@ -9,7 +20,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  async create(@Body(new ValidationPipe()) userDto: CreateUserDto) {
+  async create(@Body(ValidationPipe) userDto: CreateUserDto) {
     return await this.usersService.createUser(userDto);
   }
 
@@ -19,22 +30,22 @@ export class UsersController {
   }
 
   @Put()
-  async update(@Body() userDto: UpdateUserDto) {
+  async update(@Body(ValidationPipe) userDto: UpdateUserDto) {
     return await this.usersService.updateUser(userDto);
   }
 
-  @Delete('/:id')
-  async delete(@Param('id') id: number) {
-    return await this.usersService.delete(id);
-  }
-
   @Get('/:id')
-  async getUserFullInfo(@Param('id') id: number) {
+  async getUserFullInfo(@Param('id', ParseIntPipe) id: number) {
     return await this.usersService.getUserFullInfo(id);
   }
 
+  @Delete('/:id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return await this.usersService.delete(id);
+  }
+
   @Put('/subscription/:id')
-  async purchaseSubscription(@Param('id') id: number) {
+  async purchaseSubscription(@Param('id', ParseIntPipe) id: number) {
     return await this.usersService.purchaseSubscription(id);
   }
 }

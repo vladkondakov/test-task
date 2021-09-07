@@ -22,7 +22,10 @@ export class BooksService {
     const candidate = await this.bookRepository.findOne({ where: { name, author } });
     if (candidate) {
       throw new HttpException(
-        'The book with provided name and author is already exists.',
+        {
+          message: 'The book with provided name and author is already exists.',
+          payload: candidate,
+        },
         HttpStatus.BAD_REQUEST
       );
     }
@@ -49,7 +52,6 @@ export class BooksService {
     if (!user) {
       throw new HttpException(
         {
-          status: 400,
           message: `The user doesn't exist`,
           payload: { userId },
         },
@@ -60,7 +62,6 @@ export class BooksService {
     if (!user?.hasSubscription) {
       throw new HttpException(
         {
-          status: 400,
           message: `The user must purchase a subscription.`,
           payload: user,
         },
@@ -73,7 +74,6 @@ export class BooksService {
     if (!!book.userId) {
       throw new HttpException(
         {
-          status: 400,
           message: `Book has been taken.`,
           payload: book,
         },
@@ -84,7 +84,6 @@ export class BooksService {
     if (user.books.length >= 5) {
       throw new HttpException(
         {
-          status: 400,
           message: 'The user book limit exceeded.',
           payload: user.books,
         },
@@ -106,7 +105,6 @@ export class BooksService {
     if (!book) {
       throw new HttpException(
         {
-          status: 400,
           message: "The book doesn't exist.",
           payload: { bookId },
         },
@@ -116,7 +114,6 @@ export class BooksService {
     if (book.userId !== userId) {
       throw new HttpException(
         {
-          status: 400,
           message: 'Provided user is not the owner.',
           payload: book,
         },

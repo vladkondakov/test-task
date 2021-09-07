@@ -23,7 +23,10 @@ export class UsersService {
     const candidate = await this.getUserByEmail(dto.email);
     if (candidate) {
       throw new HttpException(
-        'The user with provided email already exists.',
+        {
+          message: 'The user with provided email already exists.',
+          payload: candidate,
+        },
         HttpStatus.BAD_REQUEST
       );
     }
@@ -37,7 +40,10 @@ export class UsersService {
   async updateUser(dto: UpdateUserDto): Promise<User> {
     const user = await this.getUserById(dto.id);
     if (!user) {
-      throw new HttpException("The user doesn't exist.", HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        { message: "The user doesn't exist.", payload: dto.id },
+        HttpStatus.BAD_REQUEST
+      );
     }
 
     const toUpdate = Object.assign(user, dto);
@@ -62,7 +68,10 @@ export class UsersService {
   async purchaseSubscription(id: number): Promise<User> {
     const user = await this.getUserById(id);
     if (!user) {
-      throw new HttpException("The user doesn't exist.", HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        { message: "The user doesn't exist.", payload: id },
+        HttpStatus.BAD_REQUEST
+      );
     }
 
     user.hasSubscription = true;
