@@ -19,11 +19,6 @@ export class UsersService {
     return user;
   }
 
-  // async getUserWithBooksById(id: number): Promise<User> {
-  //   const user = await this.userRepository.findOne(id, { relations: ['books'] });
-  //   return user;
-  // }
-
   async createUser(dto: CreateUserDto): Promise<User> {
     const candidate = await this.getUserByEmail(dto.email);
     if (candidate) {
