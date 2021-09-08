@@ -34,7 +34,7 @@ export class BooksController {
     summary: 'Get information about book',
     description: new SwaggerDescriptions().getBookD(),
   })
-  @ApiResponse({ status: 201, type: Book })
+  @ApiResponse({ status: 200, type: Book })
   @Get('/:id')
   async getBook(@Param('id', ParseIntPipe) id: number) {
     return await this.booksService.getBookById(id);
@@ -44,7 +44,7 @@ export class BooksController {
     summary: 'Give book to user',
     description: new SwaggerDescriptions().giveBookToUserD(),
   })
-  @ApiResponse({ status: 201, type: Book })
+  @ApiResponse({ status: 200, type: Book })
   @UsePipes(ValidationPipe)
   @Post('/give')
   async giveBookToUser(@Body() bookDto: BookActionDto) {
@@ -55,7 +55,7 @@ export class BooksController {
     summary: 'Take back the book',
     description: new SwaggerDescriptions().takeBookBackD(),
   })
-  @ApiResponse({ status: 201, type: Book })
+  @ApiResponse({ status: 200, type: Book })
   @UsePipes(ValidationPipe)
   @Put('/give')
   async takeBookBack(@Body() bookDto: BookActionDto) {
