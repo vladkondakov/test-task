@@ -47,6 +47,16 @@ export class BooksService {
 
   async getBookById(id: number): Promise<Book> {
     const book = await this.bookRepository.findOne(id);
+    if (!book) {
+      throw new HttpException(
+        {
+          message: `The book doesn't exist`,
+          payload: { id },
+        },
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
     return book;
   }
 
@@ -60,7 +70,7 @@ export class BooksService {
           message: `The user doesn't exist`,
           payload: { userId },
         },
-        HttpStatus.FORBIDDEN
+        HttpStatus.BAD_REQUEST
       );
     }
 
