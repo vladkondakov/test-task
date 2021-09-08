@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Book } from './books.entity';
 import { CreateBookDto } from './dto/create-book.dto';
 import { User } from 'src/users/users.entity';
-import { BookActionDto } from './dto/book-action';
+import { BookActionDto } from './dto/book-action.dto';
 
 @Injectable()
 export class BooksService {
@@ -37,6 +37,11 @@ export class BooksService {
 
   async getAllBooks(): Promise<Book[]> {
     const books = await this.bookRepository.find();
+    return books;
+  }
+
+  async getBooksByUserId(id: number): Promise<Book[]> {
+    const books = await this.bookRepository.find({ where: { userId: id } });
     return books;
   }
 

@@ -1,13 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { Book } from 'src/books/books.entity';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { DeleteResultDto } from './dto/delete-result.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Book) private readonly bookRepository: Repository<Book>
+  ) {}
 
   async getUserByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { email } });
@@ -41,7 +46,7 @@ export class UsersService {
     const user = await this.getUserById(dto.id);
     if (!user) {
       throw new HttpException(
-        { message: "The user doesn't exist.", payload: dto.id },
+        { message: "The user doesn't exist.", payload: { id: dto.id } },
         HttpStatus.BAD_REQUEST
       );
     }
@@ -61,8 +66,18 @@ export class UsersService {
     return user;
   }
 
-  async delete(id: number): Promise<DeleteResult> {
-    return await this.userRepository.delete(id);
+  async delete(id: number): Promise<DeleteResultDto> {
+    const books = await this.bookRepository.find({ where: { userId: id } });
+    if (books.length) {
+      throw new HttpException(
+        { message: 'The user has books.', payload: { books } },
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
+    const { affected } = await this.userRepository.delete(id);
+    const result: DeleteResultDto = { id, affected };
+    return result;
   }
 
   async purchaseSubscription(id: number): Promise<User> {

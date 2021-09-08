@@ -1,9 +1,12 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateUserDto {
+  @ApiProperty({ example: 'user@gmail.com', description: 'User email' })
   @IsEmail({}, { message: 'Must be email.' })
   readonly email: string;
 
+  @ApiProperty({ example: 'Tom', description: 'User first name' })
   @MinLength(2, {
     message: 'First name is too short. Minimal length is $constraint1 characters.',
   })
@@ -13,6 +16,7 @@ export class CreateUserDto {
   @IsString({ message: 'First name must be string.' })
   readonly firstName: string;
 
+  @ApiProperty({ example: 'Kane', description: 'User last name' })
   @MinLength(2, {
     message: 'First name is too short. Minimal length is $constraint1 characters.',
   })
