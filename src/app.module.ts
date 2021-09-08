@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/users.entity';
 import { UsersModule } from './users/users.module';
 import { BooksModule } from './books/books.module';
 import { Book } from './books/books.entity';
+import { ReqLoggerMiddleware } from './middlewares/req-logger.middleware';
 
 @Module({
   controllers: [],
@@ -28,4 +29,8 @@ import { Book } from './books/books.entity';
     BooksModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ReqLoggerMiddleware).forRoutes('*');
+  }
+}

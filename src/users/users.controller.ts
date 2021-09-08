@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ValidationPipe } from '../pipes/validation.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -10,20 +20,32 @@ import { UsersService } from './users.service';
 @ApiTags('Users routes')
 @Controller('users')
 export class UsersController {
+  private logger = new Logger('UsersController');
+
   constructor(private usersService: UsersService) {}
+
+  log(title: string, method: string, data: object = { params: {}, result: {} }) {
+    this.logger.log({ title, method, data });
+  }
 
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, type: [User] })
   @Get()
   async getAll() {
-    return await this.usersService.getAllUsers();
+    this.log('Get all users.', 'getAll');
+    const users = await this.usersService.getAllUsers();
+    this.log('Existing users.', 'getAll', { result: users });
+    return users;
   }
 
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, type: User })
   @Post()
   async create(@Body(ValidationPipe) userDto: CreateUserDto) {
-    return await this.usersService.createUser(userDto);
+    this.log('Create new user.', 'create', { params: userDto });
+    const user = await this.usersService.createUser(userDto);
+    this.log('User was found.', 'create', { params: userDto, result: user });
+    return user;
   }
 
   @ApiOperation({ summary: 'Update user' })
