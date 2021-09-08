@@ -7,7 +7,7 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
 async function start() {
   const app = await NestFactory.create(AppModule);
 
-  app.setGlobalPrefix('/library/api');
+  app.setGlobalPrefix('/api/v1/library');
   app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
 
   const PORT = process.env.PORT ?? 3000;

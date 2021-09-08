@@ -20,7 +20,7 @@ export class User {
   @Column({ type: 'varchar', length: 20, name: 'Last Name' })
   lastName: string;
 
-  @ApiProperty({ example: 'true', description: 'Does user have subscription? (true/false)' })
+  @ApiProperty({ example: 'false', description: 'Does user have subscription? (true/false)' })
   @Column({ default: false, name: 'Subscription' })
   hasSubscription: boolean;
 
