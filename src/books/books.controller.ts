@@ -5,14 +5,18 @@ import { BookActionDto } from './dto/book-action.dto';
 import { ValidationPipe } from '../pipes/validation.pipe';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Book } from './books.entity';
-import { SwaggerDescriptions } from 'src/utils/descriptions/swagger-descriptions';
+import { SwaggerDescriptions } from 'src/utils/swagger/swagger-descriptions';
+import { SwaggerSummary } from 'src/utils/swagger/swagger-summary';
 
 @ApiTags('Books routes')
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
-  @ApiOperation({ summary: 'Get all books' })
+  @ApiOperation({
+    summary: new SwaggerSummary().getAllBooksS(),
+    description: new SwaggerDescriptions().getAllBooksD(),
+  })
   @ApiResponse({ status: 200, type: [Book] })
   @Get()
   async getAllBooks() {
@@ -20,7 +24,7 @@ export class BooksController {
   }
 
   @ApiOperation({
-    summary: 'Create a new book',
+    summary: new SwaggerSummary().createBookS(),
     description: new SwaggerDescriptions().createBookD(),
   })
   @ApiResponse({ status: 201, type: Book })
@@ -31,7 +35,7 @@ export class BooksController {
   }
 
   @ApiOperation({
-    summary: 'Get information about book',
+    summary: new SwaggerSummary().getBookS(),
     description: new SwaggerDescriptions().getBookD(),
   })
   @ApiResponse({ status: 200, type: Book })
@@ -41,7 +45,7 @@ export class BooksController {
   }
 
   @ApiOperation({
-    summary: 'Give book to user',
+    summary: new SwaggerSummary().giveBookToUserS(),
     description: new SwaggerDescriptions().giveBookToUserD(),
   })
   @ApiResponse({ status: 200, type: Book })
@@ -52,7 +56,7 @@ export class BooksController {
   }
 
   @ApiOperation({
-    summary: 'Take back the book',
+    summary: new SwaggerSummary().takeBookBackS(),
     description: new SwaggerDescriptions().takeBookBackD(),
   })
   @ApiResponse({ status: 200, type: Book })
